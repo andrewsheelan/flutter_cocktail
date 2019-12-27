@@ -36,7 +36,7 @@ class Drink {
     _box = await Hive.openBox('drinkingBox');
     return;
   }
-  
+
   static Future<List> fetch() async {
     _openBox();
     if(_box != null) {

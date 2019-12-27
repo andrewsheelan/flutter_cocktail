@@ -107,6 +107,24 @@ class DetailsPage extends StatelessWidget {
                           (drinkDetail.measure15 ?? ''),
                     ]..removeWhere((value) => value == " - ");
 
+                    var onlyIngredients = [
+                      drinkDetail.ingredients1,
+                      drinkDetail.ingredients2,
+                      drinkDetail.ingredients3,
+                      drinkDetail.ingredients4,
+                      drinkDetail.ingredients5,
+                      drinkDetail.ingredients6,
+                      drinkDetail.ingredients7,
+                      drinkDetail.ingredients8,
+                      drinkDetail.ingredients9,
+                      drinkDetail.ingredients10,
+                      drinkDetail.ingredients11,
+                      drinkDetail.ingredients12,
+                      drinkDetail.ingredients13,
+                      drinkDetail.ingredients14,
+                      drinkDetail.ingredients15,
+                    ]..removeWhere((value) => value == null);
+
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Column(
@@ -169,6 +187,34 @@ class DetailsPage extends StatelessWidget {
                               copy: true,
                               selectAll: true,
                             ),
+                          ),
+                          Text(
+                            "\nSearch Items based on: ",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          Wrap(
+                            spacing: 8.0, // gap between adjacent chips
+                            runSpacing: 0, // gap between lines
+                            children: <Widget>[
+                              Chip(
+                                label: Text(drinkDetail.category),
+
+                              ),
+                              Chip(
+                                label: Text(drinkDetail.glass),
+                              ),
+                              ...onlyIngredients.map(
+                                (i) {
+                                  return Chip(
+                                    label: Text(i),
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                         ],
                       ),
