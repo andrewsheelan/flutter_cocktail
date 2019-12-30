@@ -179,7 +179,7 @@ class _PreviewListState extends State<PreviewList> {
           child: Align(
             alignment: Alignment.bottomCenter,
             child: FloatingActionButton(
-              heroTag: drink.name,
+              heroTag: drink.name + widget.previewLabel,
               elevation: 0,
               onPressed: () {
                 Navigator.push(
