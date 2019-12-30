@@ -5,7 +5,7 @@ class FadedPageRoute extends PageRouteBuilder {
 
   FadedPageRoute({this.widget})
       : super(
-          transitionDuration: Duration(milliseconds: 500),
+          transitionDuration: Duration(seconds: 1),
           pageBuilder: (
             context,
             animation,

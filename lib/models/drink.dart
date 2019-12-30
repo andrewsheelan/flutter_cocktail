@@ -37,24 +37,19 @@ class Drink {
     return;
   }
 
-  static Future<List> fetch() async {
+  static Future<List> fetch({ listType = 'ALL'}) async {
     _openBox();
-    if(_box != null) {
-      if(_box.toMap().length > 0) {
-        print("Fetching from Box.. ALL");
-        return convertJsonData(_box.get("ALL"));
+      if(_box != null && _box.toMap().length > 0) {
+        print("Fetching from Box.. " + listType);
+        return convertJsonData(_box.get(listType));
       } else {
         var client = new http.Client();
         try {
           var response = await client.get(_cocktailURL);
           if (response.statusCode == 200) {
             // If server returns an OK response, parse the JSON.
-            List<dynamic> drinks = json.decode(
-              response.body,
-            )['drinks'];
-            print("Fetching from API.. ALL");
-
-            _box.put("ALL", response.body);
+            print("Fetching from API.. " + listType);
+            _box.put(listType, response.body);
             return convertJsonData(response.body);
           } else {
             // If that response was not OK, throw an error.
@@ -64,7 +59,6 @@ class Drink {
           client.close();
         }
       }
-    }
   }
 
   static convertJsonData(body) {

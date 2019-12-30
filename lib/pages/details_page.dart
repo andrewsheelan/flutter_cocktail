@@ -1,3 +1,4 @@
+import 'package:cocktail/models/recent.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../models/drink_detail.dart';
@@ -15,6 +16,7 @@ class DetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Recent.add(id);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -26,28 +28,26 @@ class DetailsPage extends StatelessWidget {
                     clipper: DetailTopClippper(),
                     child: Container(
                       color: Colors.white,
-                      child: Hero(
-                        tag: id,
-                        child: CachedNetworkImage(
-                          imageUrl: url,
-                          placeholder: (context, url) =>
-                              CircularProgressIndicator(),
-                        ),
+                      child: CachedNetworkImage(
+                        imageUrl: url,
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
                       ),
                     ),
                   ),
                   Positioned(
                     top: 0,
-                    left: -20,
-                    child: FlatButton(
-                      shape: CircleBorder(
-                          side: BorderSide(color: Colors.orange, width: 2)),
+                    left: 0,
+                    child: FloatingActionButton(
+                      mini: true,
+                      elevation: 0,
                       onPressed: () {
                         Navigator.pop(context);
                       },
+                      backgroundColor: Colors.deepOrangeAccent,
                       child: Icon(
                         Icons.arrow_back,
-                        color: Colors.orange,
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -59,71 +59,8 @@ class DetailsPage extends StatelessWidget {
                   if (snapshot.hasData) {
                     DrinkDetail drinkDetail = snapshot.data;
 
-                    var ingredients = [
-                      (drinkDetail.ingredients1 ?? '') +
-                          " - " +
-                          (drinkDetail.measure1 ?? ''),
-                      (drinkDetail.ingredients2 ?? '') +
-                          " - " +
-                          (drinkDetail.measure2 ?? ''),
-                      (drinkDetail.ingredients3 ?? '') +
-                          " - " +
-                          (drinkDetail.measure3 ?? ''),
-                      (drinkDetail.ingredients4 ?? '') +
-                          " - " +
-                          (drinkDetail.measure4 ?? ''),
-                      (drinkDetail.ingredients5 ?? '') +
-                          " - " +
-                          (drinkDetail.measure5 ?? ''),
-                      (drinkDetail.ingredients6 ?? '') +
-                          " - " +
-                          (drinkDetail.measure6 ?? ''),
-                      (drinkDetail.ingredients7 ?? '') +
-                          " - " +
-                          (drinkDetail.measure7 ?? ''),
-                      (drinkDetail.ingredients8 ?? '') +
-                          " - " +
-                          (drinkDetail.measure8 ?? ''),
-                      (drinkDetail.ingredients9 ?? '') +
-                          " - " +
-                          (drinkDetail.measure9 ?? ''),
-                      (drinkDetail.ingredients10 ?? '') +
-                          " - " +
-                          (drinkDetail.measure10 ?? ''),
-                      (drinkDetail.ingredients11 ?? '') +
-                          " - " +
-                          (drinkDetail.measure11 ?? ''),
-                      (drinkDetail.ingredients12 ?? '') +
-                          " - " +
-                          (drinkDetail.measure12 ?? ''),
-                      (drinkDetail.ingredients13 ?? '') +
-                          " - " +
-                          (drinkDetail.measure13 ?? ''),
-                      (drinkDetail.ingredients14 ?? '') +
-                          " - " +
-                          (drinkDetail.measure14 ?? ''),
-                      (drinkDetail.ingredients15 ?? '') +
-                          " - " +
-                          (drinkDetail.measure15 ?? ''),
-                    ]..removeWhere((value) => value == " - ");
-
-                    var onlyIngredients = [
-                      drinkDetail.ingredients1,
-                      drinkDetail.ingredients2,
-                      drinkDetail.ingredients3,
-                      drinkDetail.ingredients4,
-                      drinkDetail.ingredients5,
-                      drinkDetail.ingredients6,
-                      drinkDetail.ingredients7,
-                      drinkDetail.ingredients8,
-                      drinkDetail.ingredients9,
-                      drinkDetail.ingredients10,
-                      drinkDetail.ingredients11,
-                      drinkDetail.ingredients12,
-                      drinkDetail.ingredients13,
-                      drinkDetail.ingredients14,
-                      drinkDetail.ingredients15,
-                    ]..removeWhere((value) => value == null);
+                    var ingredients = drinkDetail.ingredientsList();
+                    var onlyIngredients = drinkDetail.ingredientsOnlyList();
 
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -202,7 +139,6 @@ class DetailsPage extends StatelessWidget {
                             children: <Widget>[
                               Chip(
                                 label: Text(drinkDetail.category),
-
                               ),
                               Chip(
                                 label: Text(drinkDetail.glass),

@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 
-
 class DrinkDetail {
   final String name;
   final String url;
@@ -143,8 +142,50 @@ class DrinkDetail {
     );
   }
 
+  List<String> ingredientsList() {
+    return [
+      (ingredients1 ?? '') + " - " + (measure1 ?? ''),
+      (ingredients2 ?? '') + " - " + (measure2 ?? ''),
+      (ingredients3 ?? '') + " - " + (measure3 ?? ''),
+      (ingredients4 ?? '') + " - " + (measure4 ?? ''),
+      (ingredients5 ?? '') + " - " + (measure5 ?? ''),
+      (ingredients6 ?? '') + " - " + (measure6 ?? ''),
+      (ingredients7 ?? '') + " - " + (measure7 ?? ''),
+      (ingredients8 ?? '') + " - " + (measure8 ?? ''),
+      (ingredients9 ?? '') + " - " + (measure9 ?? ''),
+      (ingredients10 ?? '') + " - " + (measure10 ?? ''),
+      (ingredients11 ?? '') + " - " + (measure11 ?? ''),
+      (ingredients12 ?? '') + " - " + (measure12 ?? ''),
+      (ingredients13 ?? '') + " - " + (measure13 ?? ''),
+      (ingredients14 ?? '') + " - " + (measure14 ?? ''),
+      (ingredients15 ?? '') + " - " + (measure15 ?? ''),
+    ]..removeWhere((value) => value == " - ");
+  }
+
+  List<String> ingredientsOnlyList() {
+    return [
+      ingredients1,
+      ingredients2,
+      ingredients3,
+      ingredients4,
+      ingredients5,
+      ingredients6,
+      ingredients7,
+      ingredients8,
+      ingredients9,
+      ingredients10,
+      ingredients11,
+      ingredients12,
+      ingredients13,
+      ingredients14,
+      ingredients15,
+    ]..removeWhere((value) => value == null);
+  }
+
   static Box _box;
   static Future _openBox() async {
+    if (_box != null) return;
+
     var dir = await getApplicationDocumentsDirectory();
     Hive.init(dir.path);
     _box = await Hive.openBox('drinkDetailsBox');
@@ -155,32 +196,29 @@ class DrinkDetail {
       'https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=';
   static Future<DrinkDetail> fetch(String id) async {
     _openBox();
-    if(_box != null) {
-      if (_box.get(id) != null) {
-        print("Fetching from Box.. " + id);
-        return convertJsonData(_box.get(id));
-      } else {
-        var client = new http.Client();
-        try {
-          var response = await client.get(_cocktailURL + id);
-          if (response.statusCode == 200) {
-            // If server returns an OK response, parse the JSON.
-            print("Fetching from API.. " + id);
-            _box.put(id, response.body);
-            return convertJsonData(response.body);
-          } else {
-            // If that response was not OK, throw an error.
-            throw Exception('Failed to load cocktails..');
-          }
-        } catch (e) {
-          throw Exception('Failed to load cocktails.. Exception');
-        } finally {
-          client.close();
+    if (_box != null && _box.get(id) != null) {
+      print("Fetching from Box.. " + id);
+      return convertJsonData(_box.get(id));
+    } else {
+      var client = new http.Client();
+      try {
+        var response = await client.get(_cocktailURL + id);
+        if (response.statusCode == 200) {
+          // If server returns an OK response, parse the JSON.
+          print("Fetching from API.. " + id);
+          _box.put(id, response.body);
+          return convertJsonData(response.body);
+        } else {
+          // If that response was not OK, throw an error.
+          throw Exception('Failed to load cocktails..');
         }
+      } catch (e) {
+        throw Exception('Failed to load cocktails.. Exception');
+      } finally {
+        client.close();
       }
     }
   }
-
 
   static convertJsonData(body) {
     Map<String, dynamic> drink = json.decode(body)['drinks'][0];
