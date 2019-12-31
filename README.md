@@ -11,3 +11,8 @@ Also APIs from:
 https://www.thecocktaildb.com/api.php
 
 
+![](./images/image1.png)
+![](./images/image2.png)
+![](./images/image3.png)
+
+
